@@ -42,7 +42,7 @@ predict_button = st.sidebar.button("🔮 Predict & Generate Maps")
 # -------------------------
 # Main UI
 # -------------------------
-st.title("🚑 Community Service Prototype – Ambulance Demand & Routing")
+st.title("🚑 Ambulance Demand & Routing")
 st.write("This prototype predicts emergency demand and suggests hospital routes based on past patterns.")
 
 # -------------------------
