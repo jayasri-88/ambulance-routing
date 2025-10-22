@@ -71,12 +71,26 @@ if predict_button:
     st.success(f"🚨 Predicted Emergencies: **{prediction}**")
 
     # -------------------------
+    # Hospitals dictionary
+    # -------------------------
+    hospitals_dict = {
+        'Government Hospital': (17.7320, 83.3140),
+        'City Hospital': (17.7345, 83.3180),
+        'Private Hospital': (17.7360, 83.3200)
+    }
+
+    # -------------------------
+    # Determine dynamic map center
+    # -------------------------
+    map_center = hospitals_dict.get(hospital, [17.7333, 83.3167])
+
+    # -------------------------
     # Heatmap (synthetic demo)
     # -------------------------
-    heat_map = folium.Map(location=[17.7333, 83.3167], zoom_start=13)
+    heat_map = folium.Map(location=map_center, zoom_start=13)
     heat_data = [[
-        np.random.uniform(17.70, 17.75),
-        np.random.uniform(83.30, 83.35),
+        np.random.uniform(map_center[0]-0.03, map_center[0]+0.03),
+        np.random.uniform(map_center[1]-0.03, map_center[1]+0.03),
         np.random.randint(1, 5)
     ] for _ in range(200)]
     HeatMap(heat_data, radius=15, max_zoom=13).add_to(heat_map)
@@ -84,18 +98,13 @@ if predict_button:
     # -------------------------
     # Routes Map (demo with hospitals & zones)
     # -------------------------
-    hospitals_dict = {
-        'Government Hospital': (17.7320, 83.3140),
-        'City Hospital': (17.7345, 83.3180),
-        'Private Hospital': (17.7360, 83.3200)
-    }
-    m_routes = folium.Map(location=[17.7333, 83.3167], zoom_start=13)
+    m_routes = folium.Map(location=map_center, zoom_start=13)
     # Add hospitals
     for h_name, coords_h in hospitals_dict.items():
         folium.Marker(coords_h, popup=h_name, icon=folium.Icon(color='green')).add_to(m_routes)
-    # Add some dummy zones
+    # Add some dummy zones near selected hospital
     for i in range(5):
-        lat, lon = np.random.uniform(17.70, 17.75), np.random.uniform(83.30, 83.35)
+        lat, lon = np.random.uniform(map_center[0]-0.03, map_center[0]+0.03), np.random.uniform(map_center[1]-0.03, map_center[1]+0.03)
         folium.Marker([lat, lon], popup=f"Zone {i}", icon=folium.Icon(color='red')).add_to(m_routes)
         folium.PolyLine([hospitals_dict[hospital], (lat, lon)], color='blue').add_to(m_routes)
 
